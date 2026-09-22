@@ -17,9 +17,9 @@ const routes = [
         component: About
     },
     {
-        path: '/registration',
-        name: 'Registration',
-        component: RegistrationForm
+        path: '/milestone',
+        name: 'Minestone',
+        component: Milestone
     },
 ]
 
