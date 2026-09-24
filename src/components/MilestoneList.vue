@@ -1,63 +1,39 @@
+
+<template>
+  <div class="card">
+    <h2>Milestones</h2>
+
+    <p v-if="milestones.length === 0">
+      No milestones yet.
+    </p>
+
+    <MilestoneItem
+      v-for="milestone in milestones"
+      :key="milestone.id"
+      :milestone="milestone"
+      @finish="finish"
+      @delete="remove"
+    />
+  </div>
+</template>
+
 <script setup>
-import { useFormatDate } from '../composables/useFormatDate'
+import MilestoneItem from './MilestoneItem.vue'
 
 defineProps({
-  task: {
-    type: Object,
+  milestones: {
+    type: Array,
     required: true
   }
 })
 
-const emit = defineEmits([
-  'complete',
-  'delete'
-])
+const emit = defineEmits(['finish', 'delete'])
 
-const { formatDate } = useFormatDate()
+function finish(id) {
+  emit('finish', id)
+}
+
+function remove(id) {
+  emit('delete', id)
+}
 </script>
-
-<template>
-  <article class="task">
-    <h3>{{ milestone.title }}</h3>
-
-    <p>
-      <strong>Category:</strong>
-      {{ milestone.category }}
-    </p>
-
-    <p>
-      <strong>Priority:</strong>
-      {{ milestone.priority }}
-    </p>
-
-    <p>
-      <strong>Due Date:</strong>
-      {{ formatDate(record.dueDate) }}
-    </p>
-
-    <p>
-      <strong>Status:</strong>
-
-      <span v-if="record.completed">
-        Completed
-      </span>
-
-      <span v-else>
-        Pending
-      </span>
-    </p>
-
-    <button
-      v-if="!task.completed"
-      @click="emit('complete', record.id)"
-    >
-      Mark as Completed
-    </button>
-
-    <button
-      @click="emit('delete', record.id)"
-    >
-      Delete
-    </button>
-  </article>
-</template>

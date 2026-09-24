@@ -1,94 +1,86 @@
+<template>
+  <div class="card">
+    <h2>Add Milestone</h2>
+
+    <form @submit.prevent="addMilestone">
+
+      <label>Milestone Name</label>
+      <input
+        v-model="form.name"
+        type="text"
+        placeholder="Enter milestone name"
+      />
+
+      <label>Project Name</label>
+      <input
+        v-model="form.project"
+        type="text"
+        placeholder="Enter project name"
+      />
+
+      <label>Priority</label>
+      <select v-model="form.priority">
+        <option value="">Select priority</option>
+        <option>Low</option>
+        <option>Medium</option>
+        <option>High</option>
+      </select>
+
+      <label>Target Date</label>
+      <input
+        v-model="form.targetDate"
+        type="date"
+      />
+
+      <p v-if="error" class="error">
+        {{ error }}
+      </p>
+
+      <button type="submit">
+        Add Milestone
+      </button>
+
+    </form>
+  </div>
+</template>
+
 <script setup>
 import { reactive, ref } from 'vue'
 
-const emit = defineEmits(['add'])
+const emit = defineEmits(['add-milestone'])
 
 const form = reactive({
-  title: '',
-  category: '',
-  priority: 'Medium',
-  dueDate: ''
+  name: '',
+  project: '',
+  priority: '',
+  targetDate: ''
 })
 
 const error = ref('')
 
-function submitTask() {
+function addMilestone() {
   error.value = ''
 
   if (
-    !form.title ||
-    !form.category ||
-    !form.dueDate
+    !form.name ||
+    !form.project ||
+    !form.priority ||
+    !form.targetDate
   ) {
-    error.value = 'Please complete all required fields.'
+    error.value = 'Please fill in all fields.'
     return
   }
 
-  const newTask = {
-    id: Date.now(),
-    title: form.title,
-    category: form.category,
+  emit('add-milestone', {
+    name: form.name,
+    project: form.project,
     priority: form.priority,
-    dueDate: form.dueDate,
-    completed: false
-  }
+    targetDate: form.targetDate
+  })
 
-  emit('add', newTask)
-
-  form.title = ''
-  form.category = ''
-  form.priority = 'Medium'
-  form.dueDate = ''
+  form.name = ''
+  form.project = ''
+  form.priority = ''
+  form.targetDate = ''
 }
 </script>
-
-<template>
-  <form @submit.prevent="submitTask">
-    <h2>Add Task</h2>
-
-    <p v-if="error" class="error">
-      {{ error }}
-    </p>
-
-    <div>
-      <label>Task Title</label>
-      <input
-        v-model="form.title"
-        type="text"
-        placeholder="Enter task title"
-      />
-    </div>
-
-    <div>
-      <label>Category</label>
-      <input
-        v-model="form.category"
-        type="text"
-        placeholder="Enter category"
-      />
-    </div>
-
-    <div>
-      <label>Priority</label>
-
-      <select v-model="form.priority">
-        <option value="Low">Low</option>
-        <option value="Medium">Medium</option>
-        <option value="High">High</option>
-      </select>
-    </div>
-
-    <div>
-      <label>Due Date</label>
-
-      <input
-        v-model="form.dueDate"
-        type="date"
-      />
-    </div>
-
-    <button type="submit">
-      Add Task
-    </button>
-  </form>
-</template>
